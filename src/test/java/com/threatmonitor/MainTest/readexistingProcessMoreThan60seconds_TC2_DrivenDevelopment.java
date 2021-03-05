@@ -1,5 +1,6 @@
 package com.threatmonitor.MainTest;
 
+import java.io.File;
 import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,17 +9,33 @@ import java.util.concurrent.TimeUnit;
 
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gson.Gson;
+import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
+import com.relevantcodes.extentreports.LogStatus;
 import com.threatmonitor.main.dataDrivenfunctions;
+import com.threatmonitor.main.testreports;
 
 public class readexistingProcessMoreThan60seconds_TC2_DrivenDevelopment {
 
+	ExtentReports extent;
+	ExtentTest logger;
+	testreports obj;
+	
+	@Before
+	public void reportStart() {
+		obj=new testreports();
+		extent=obj.reportgenerator();
+	}
 
 	@Test
 	public void readexistingProcessMoreThan60seconds() {
-
+		
+		
+	
 		/*
 		 * TestScript Summary- Identifying an existing running process on the system which is captured after 60 seconds from the previous session
 		 *
@@ -31,8 +48,13 @@ public class readexistingProcessMoreThan60seconds_TC2_DrivenDevelopment {
 		 * Fyi- Capture can be identified by TimeStamp of each process codes
 		 *
 		 */
+		
+		logger = extent.startTest(this.getClass().getName());
 
 		try {
+			
+			logger = extent.startTest(this.getClass().getName());
+					
 			//calling Emulate process code functions to generate given number of process to capture
 			dataDrivenfunctions.GenerateProcess(5);
 
@@ -43,6 +65,8 @@ public class readexistingProcessMoreThan60seconds_TC2_DrivenDevelopment {
 
 			//File reader class to load the JSON file .i.e reading existing captured process details
 			FileReader reader = new FileReader(System.getProperty("user.dir")+"//src//main//resources//processCodefile.json");
+			
+			logger.log(LogStatus.INFO, "file is reading from the JSON");
 
 			//decalring Obj for JsonParser
 			Object obj = jsonParser.parse(reader);
@@ -60,7 +84,8 @@ public class readexistingProcessMoreThan60seconds_TC2_DrivenDevelopment {
 
 			//declaring JSOn object
 			JSONObject ExtendProcess=new JSONObject();
-
+			
+			@SuppressWarnings("unchecked")
 			//Declaring iterator to read for each new existing codes
 			Iterator<String> keys= ProcessExistingjson.keys();
 
@@ -80,9 +105,11 @@ public class readexistingProcessMoreThan60seconds_TC2_DrivenDevelopment {
 
 				//Newly captured existing process for teh data validation
 				ExtendProcess.put(processcode, newtimeStamp);
-
+				
+				logger.log(LogStatus.INFO, "Comparing existing captured process and new process");
 				//If newly captured existied running process has differences of 60 seconds then timestamp will be updated in the memory
-				if(dataDrivenfunctions.timeDifferbetween2dates(oldtimestamp,newtimeStamp)) {
+				if(dataDrivenfunctions.timeDifferbetween2dates(oldtimestamp,newtimeStamp)) {					
+					
 					int counter=0;
 					System.out.println("Process tracked less than in 60 seconds");
 					System.out.println("Not updating the file with process and stamp");
@@ -109,12 +136,17 @@ public class readexistingProcessMoreThan60seconds_TC2_DrivenDevelopment {
 
 			}
 		}catch(Exception e) {
+			
+			logger.log(LogStatus.FAIL, "Test Case Passed is Failed due to "+e);
 
 			e.printStackTrace();
 
 		}
+		logger.log(LogStatus.PASS, "TEST CASE IS PASSED");
+		extent.flush();
+		
 
-	}
+	}	
 
 }
 

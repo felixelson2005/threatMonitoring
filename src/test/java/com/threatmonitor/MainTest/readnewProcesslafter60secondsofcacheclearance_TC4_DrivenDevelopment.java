@@ -58,6 +58,7 @@ public class readnewProcesslafter60secondsofcacheclearance_TC4_DrivenDevelopment
 			JSONObject ExtendProcess=dataDrivenfunctions.generateProcess(5);
 
 			//Declaring iterator to read for each new process codes
+			@SuppressWarnings("unchecked")
 			Iterator<String> keys= ExtendProcess.keys();
 
 			//Looping starts
