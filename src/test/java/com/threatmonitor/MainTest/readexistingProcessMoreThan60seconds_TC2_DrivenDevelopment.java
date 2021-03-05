@@ -1,6 +1,5 @@
 package com.threatmonitor.MainTest;
 
-import java.io.File;
 import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,8 +31,7 @@ public class readexistingProcessMoreThan60seconds_TC2_DrivenDevelopment {
 	}
 
 	@Test
-	public void readexistingProcessMoreThan60seconds() {
-		
+	public void readexistingProcessMoreThan60seconds() {		
 		
 	
 		/*
@@ -49,12 +47,12 @@ public class readexistingProcessMoreThan60seconds_TC2_DrivenDevelopment {
 		 *
 		 */
 		
+		//Start the logger to log the reports
 		logger = extent.startTest(this.getClass().getName());
 
 		try {
 			
-			logger = extent.startTest(this.getClass().getName());
-					
+								
 			//calling Emulate process code functions to generate given number of process to capture
 			dataDrivenfunctions.GenerateProcess(5);
 
@@ -96,10 +94,12 @@ public class readexistingProcessMoreThan60seconds_TC2_DrivenDevelopment {
 
 				//Store each process code in a local variable
 				String processcode=keys.next();
-
+				
+				logger.log(LogStatus.INFO, "Capture the new process codes timestamp");
 				//capture the timestamp of newly captured existing process
 				String newtimeStamp = new SimpleDateFormat("yy/MM/dd HH:mm:ss").format(new Date());
-
+				
+				logger.log(LogStatus.INFO, "Capture the existing process codes timestamp");
 				//Existing running process captured timestamp
 				String oldtimestamp=ProcessExistingjson.getString(processcode);
 
@@ -123,7 +123,7 @@ public class readexistingProcessMoreThan60seconds_TC2_DrivenDevelopment {
 				}
 
 			}
-
+			logger.log(LogStatus.INFO, "Update the JSON file based on the changes");
 			//When there is a change in teh process timestamp, update the JSON file
 			if(changecount>0) {
 

@@ -7,12 +7,28 @@ import java.util.Iterator;
 
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gson.Gson;
+import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
+import com.relevantcodes.extentreports.LogStatus;
 import com.threatmonitor.main.dataDrivenfunctions;
+import com.threatmonitor.main.testreports;
 
 public class readexistingProcesswithin60seconds_TC1_DrivenDevelopment {
+	
+	ExtentReports extent;
+	ExtentTest logger;
+	testreports obj;
+	
+	@Before
+	public void reportStart() {
+		obj=new testreports();
+		extent=obj.reportgenerator();
+	}
+
 
 	@Test
 	public void readexistingProcesswithin60seconds() {
@@ -30,6 +46,9 @@ public class readexistingProcesswithin60seconds_TC1_DrivenDevelopment {
 		 * Fyi- Capture can be identified by TimeStamp of each process codes
 		 *
 		 */
+		
+		//Start the logger to log the reports
+		logger = extent.startTest(this.getClass().getName());
 
 
 		try {
@@ -42,6 +61,8 @@ public class readexistingProcesswithin60seconds_TC1_DrivenDevelopment {
 
 			//File reader class to load the JSON file .i.e reading existing captured process details
 			FileReader reader = new FileReader(System.getProperty("user.dir")+"//src//main//resources//processCodefile.json");
+			
+			logger.log(LogStatus.INFO, "file is reading from the JSON");
 
 			//decalring Obj for JsonParser
 			Object obj = jsonParser.parse(reader);
@@ -67,9 +88,13 @@ public class readexistingProcesswithin60seconds_TC1_DrivenDevelopment {
 
 			//Looping starts
 			while(keys.hasNext()) {
+				
+				logger.log(LogStatus.INFO, "Capture the new process codes");
 
 				//Store each process code in a local variable
 				String processcode=keys.next();
+				
+				logger.log(LogStatus.INFO, "Capture the new process codes timestamp");
 
 				//capture the timestamp of newly captured existing process
 				String newtimeStamp = new SimpleDateFormat("yy/MM/dd HH:mm:ss").format(new Date());
@@ -79,7 +104,8 @@ public class readexistingProcesswithin60seconds_TC1_DrivenDevelopment {
 
 				//Newly captured existing process for teh data validation
 				ExtendProcess.put(processcode, newtimeStamp);
-
+				
+				logger.log(LogStatus.INFO, "Comparing existing captured process and new process");
 				//If newly captured existied running process has differences of 60 seconds then timestamp will be updated in the memory
 				if(dataDrivenfunctions.timeDifferbetween2dates(oldtimestamp,newtimeStamp)) {
 					int counter=0;
@@ -95,7 +121,8 @@ public class readexistingProcesswithin60seconds_TC1_DrivenDevelopment {
 				}
 
 			}
-
+			
+			logger.log(LogStatus.INFO, "Update the JSON file based on the changes");
 			//When there is a change in teh process timestamp, update the JSON file
 			if(changecount>0) {
 
@@ -108,10 +135,14 @@ public class readexistingProcesswithin60seconds_TC1_DrivenDevelopment {
 
 			}
 		}catch(Exception e) {
+			
+			logger.log(LogStatus.FAIL, "Test Case Passed is Failed due to "+e);
 
 			e.printStackTrace();
 
 		}
+		logger.log(LogStatus.PASS, "TEST CASE IS PASSED");
+		extent.flush();
 
 	}
 
