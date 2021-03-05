@@ -1,4 +1,4 @@
-package com.threatmonitor.server.main;
+package com.threatmonitor.main;
 
 import java.io.FileWriter;
 import java.io.IOException;

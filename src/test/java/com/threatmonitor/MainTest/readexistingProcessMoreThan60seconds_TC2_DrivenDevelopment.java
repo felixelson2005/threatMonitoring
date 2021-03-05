@@ -1,41 +1,42 @@
-package testDataDrivenPack;
+package com.threatmonitor.MainTest;
 
 import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.junit.Test;
 
 import com.google.gson.Gson;
-import com.threatmonitor.server.main.dataDrivenfunctions;
+import com.threatmonitor.main.dataDrivenfunctions;
 
-public class readexistingProcesswithin60seconds_TC1_DrivenDevelopment {
+public class readexistingProcessMoreThan60seconds_TC2_DrivenDevelopment {
+
 
 	@Test
-	public void readexistingProcesswithin60seconds() {
-
+	public void readexistingProcessMoreThan60seconds() {
 
 		/*
-		 * TestScript Summary- Identifying an existing running process on the system which is captured within 60 seconds from the previous session
+		 * TestScript Summary- Identifying an existing running process on the system which is captured after 60 seconds from the previous session
 		 *
-		 * Expectations- When system finds a existing running process codes everytime, it should Discard the process details in the cache but counter will be incremented
+		 * Expectations- When system finds a existing running process codes more than 60 seconds of last captured , it should capture the process details in the cache.
 		 *
 		 * Static value of process- codes taken upto 5 numbers
 		 *
-		 * Results- When System identifies the existing running process in teh memory within 60 seconds, system discard to add it in file
+		 * Results- When System identifies the existing running process in the memory after 60 seconds, system capture the process details agains in the memory as every 60 seconds the memeory will wipe off
 		 *
 		 * Fyi- Capture can be identified by TimeStamp of each process codes
 		 *
 		 */
 
-
 		try {
-
 			//calling Emulate process code functions to generate given number of process to capture
 			dataDrivenfunctions.GenerateProcess(5);
+
+			TimeUnit.SECONDS.sleep(61);
 
 			//Json parser declaration
 			JSONParser jsonParser = new JSONParser();

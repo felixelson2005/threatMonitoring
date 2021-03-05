@@ -1,4 +1,4 @@
-package testDataDrivenPack;
+package com.threatmonitor.MainTest;
 
 import java.io.FileReader;
 import java.util.Iterator;
@@ -8,7 +8,7 @@ import org.json.simple.parser.JSONParser;
 import org.junit.Test;
 
 import com.google.gson.Gson;
-import com.threatmonitor.server.main.dataDrivenfunctions;
+import com.threatmonitor.main.dataDrivenfunctions;
 
 public class readnewProcesslessthan60seconds_TC3_DrivenDevelopment {
 
